@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
@@ -10,7 +12,8 @@
         android:id="@+id/image"
         android:layout_width="96dp"
         android:layout_height="132dp"
-        android:layout_centerVertical="true" />
+        android:contentDescription="@string/animal"
+        tools:srcCompat="@drawable/lion" />
 
     <LinearLayout android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -20,20 +23,21 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/image"
             android:textColor="#03fc41"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:text="Lion" />
+
         <TextView
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/image"
             android:textColor="#f9ec04"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:text="獅（學名：Panthera leo），俗稱獅子（古稱狻猊），被人稱為萬獸之王。獅是一種生存在非洲和亞洲的大型貓科動物，豹屬之中最著名的一種，現存中是繼老虎之後第二大的貓科，其雄性的鬃毛是其特徵之一，過去牠分布在多個洲，但因為人類的開發，現代的獅群生存環境與分布已經大大縮小了。中國地區本來沒有獅子，直到張騫通西域以後，才從伊朗附近的地區知道獅子的存在。" />
     </LinearLayout>
 
 </LinearLayout>
