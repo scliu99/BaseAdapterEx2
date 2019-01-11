@@ -1,16 +1,30 @@
 package com.example.cafeburger.baseadapterex1;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import android.support.design.widget.Snackbar;
+import android.widget.TextView;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private List<Animal> animals = new ArrayList<Animal>();
-
+    private MyAdapter myAdapter = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,8 +37,78 @@ public class MainActivity extends AppCompatActivity {
         animals.add(new Animal("Rabbit", "兔，又稱兔子，在漢語中是哺乳類兔形目兔科（學名：Leporidae）物種的總稱。",R.drawable.rabbit));
         animals.add(new Animal("Turtle", "龜鱉目（學名：Testudines）通稱為龜、烏龜，是脊索動物門爬行綱的一目，現存14科共341種[1]，它們的肋骨進化成特殊的骨製和軟骨護盾，稱為龜甲。[2] 龜是通常可以在陸上及水中生活，亦有長時間在海中生活的海龜。龜亦是長壽的動物，自然環境中有超過百年壽命的[3]。像很多爬行動物一般，龜是變溫動物。但是由於體內新陳代謝的作用，棱皮龜的體溫要高於周圍環境水溫。",R.drawable.turtle));
 
-        MyAdapter myAdapter = new MyAdapter(this, animals);
-        ListView listView = (ListView)findViewById(R.id.listview);
+        myAdapter = new MyAdapter(this, animals);
+        final ListView listView = (ListView)findViewById(R.id.listview);
         listView.setAdapter(myAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, final int position, long id) {
+                TextView name = view.findViewById(R.id.name);
+                TextView description = view.findViewById(R.id.description);
+                ImageView image = view.findViewById(R.id.image);
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putExtra("name",name.getText());
+                intent.putExtra("description",description.getText());
+
+                Bitmap bmp = ((BitmapDrawable)image.getDrawable()).getBitmap();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+
+                intent.putExtra("image",byteArray);
+                startActivityForResult(intent,position);
+
+
+            }
+        });
+
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(final AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("是否確定要刪除此筆資料?")
+                        .setTitle("警告!");
+                builder.setPositiveButton("是",new DialogInterface.OnClickListener(){
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        animals.remove(position);
+                        myAdapter.notifyDataSetChanged();
+                        Snackbar.make(parent, "資料己經刪除!",Snackbar.LENGTH_LONG )
+                                .show();
+                    }
+                });
+                builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+                builder.create().show();
+                return true;
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+
+        String name = intent.getStringExtra("name");
+        String description = intent.getStringExtra("description");
+        //byte[] imageBytes =intent.getByteArrayExtra("image");
+        //Bitmap bmp = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
+        Animal animal = animals.get(requestCode);
+        animal.setName(name);
+        animal.setDescription(description);
+        myAdapter.notifyDataSetChanged();
+
+
+
+
     }
 }
