@@ -95,20 +95,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
+        if(resultCode == RESULT_OK){
 
+            String name = intent.getStringExtra("name");
+            String description = intent.getStringExtra("description");
+            //byte[] imageBytes =intent.getByteArrayExtra("image");
+            //Bitmap bmp = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
 
-        String name = intent.getStringExtra("name");
-        String description = intent.getStringExtra("description");
-        //byte[] imageBytes =intent.getByteArrayExtra("image");
-        //Bitmap bmp = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            Animal animal = animals.get(requestCode);
+            animal.setName(name);
+            animal.setDescription(description);
+            myAdapter.notifyDataSetChanged();
 
-        Animal animal = animals.get(requestCode);
-        animal.setName(name);
-        animal.setDescription(description);
-        myAdapter.notifyDataSetChanged();
+        }else{
+            Snackbar.make(getWindow().getDecorView().getRootView(),"使用者取消了編輯!",Snackbar.LENGTH_LONG).show();
 
-
-
+        }
 
     }
 }

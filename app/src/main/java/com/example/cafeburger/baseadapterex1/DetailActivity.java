@@ -62,6 +62,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 setResult(RESULT_CANCELED);
+                finish();
             }
         });
 
